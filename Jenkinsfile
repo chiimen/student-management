@@ -1,3 +1,4 @@
+```groovy
 pipeline {
     agent any
 
@@ -11,15 +12,10 @@ pipeline {
     }
 
     stages {
+
         stage('Commit') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/chiimen/student-management.git'
-
-                sh '''
-                    echo "Dernier commit :"
-                    git log -1 --pretty=format:"Hash: %h%nAuteur: %an%nMessage: %s"
-                '''
+                sh 'git log -1 --pretty=format:"Hash: %h%nAuteur: %an%nMessage: %s"'
             }
         }
 
@@ -33,6 +29,7 @@ pipeline {
             steps {
                 sh 'mvn test'
             }
+
             post {
                 always {
                     junit 'target/surefire-reports/*.xml'
@@ -46,8 +43,10 @@ pipeline {
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             echo 'Pipeline terminé avec succès.'
         }
+
         failure {
             echo 'Pipeline échoué.'
         }
     }
 }
+```
